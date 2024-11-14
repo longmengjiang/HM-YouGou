@@ -21,8 +21,10 @@ import App from './App.vue'
 
 
 // 全局引入弹窗，要挂载的
-import { $showToast, $showLoading } from './methods'
+import { $showToast, $showLoading, $deviceInfo } from './methods'
 uni.$showToast = $showToast // 就这样挂载，使用也是 uni.$showToast 即可
+uni.$showLoading = $showLoading
+uni.$deviceInfo = $deviceInfo
 
 // 1、$http 的配置和使用
 import { $http } from "@escook/request-miniprogram"

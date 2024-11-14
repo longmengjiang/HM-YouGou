@@ -5,7 +5,7 @@
   const swiperList = ref([])
   const getSwiperList = async () => {
     const { data: res } = await  uni.$http.get('/api/public/v1/home/swiperdata')
-    if (res.meta.status !== 200) uni.$showToast('轮播图请求失败')
+    if (res.meta.status !== 200) return uni.$showToast('轮播图请求失败')
     swiperList.value = res.message
   }
   getSwiperList()
@@ -14,7 +14,7 @@
   const navList = ref([])
   const getNavList = async () => {
     const { data: res } = await uni.$http.get('/api/public/v1/home/catitems')
-    if (res.meta.status !== 200) uni.$showToast('分类请求失败')
+    if (res.meta.status !== 200) return uni.$showToast('分类请求失败')
     navList.value = res.message 
   }
   getNavList()
@@ -31,7 +31,7 @@
   const floorList = ref([])
   const getFloorList = async () => {
     const { data: res } = await uni.$http.get('/api/public/v1/home/floordata')
-    if (res.meta.status !== 200) uni.$showMsg()
+    if (res.meta.status !== 200) return uni.$showMsg()
     
     // 做 导航的处理  →  因为后端返回的不是一个好地址！！！
     // 通过双层 forEach 循环，处理 URL 地址
@@ -41,7 +41,6 @@
         })
       })
     floorList.value = res.message
-    console.log(floorList.value)
   }
   getFloorList()
 </script>
