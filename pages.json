@@ -2,20 +2,29 @@
 	"pages": [
 	{
 	  "path" : "pages/home/home"
-	  
 	},
 	{
 	  "path" : "pages/cate/cate"
-	  
 	},
 	{
 	  "path" : "pages/cart/cart"
-	  
 	},
 	{
 	  "path" : "pages/my/my"
-	  
 	}],
+  "subPackages": [
+    {
+      "root": "goods",
+      "pages": [
+        {
+          "path": "goodsDetail/goodsDetail"
+        },
+        {
+          "path": "goodsList/goodsList"
+        }
+      ]
+    }
+  ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "黑马优购",
