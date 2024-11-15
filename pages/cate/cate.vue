@@ -1,8 +1,9 @@
 <script setup>
   import { ref } from 'vue'
+  
   // 一、获取设备信息
   const deviceInfo = uni.$deviceInfo
-  const scrollHeight = deviceInfo.windowHeight
+  const scrollHeight = deviceInfo.windowHeight - 50
   
   // 二、获取分类列表数据模块  →  包含 一级分类、二级分类，不包含三级分类  →  因为我太乱套了，别问
   const cateList = ref([])
@@ -33,10 +34,16 @@
       url: '/goods/goodsList/goodsList?cid=' + item3.cat_id
     })
   }
+  
+  // 五、传递子组件 my-search 的值的样式
+  const backgroundColor = ref('#c00000')
+  const borderRadius = ref(15)
 </script>
 
 <template>
   <view>
+    <!-- 顶部的子组件 -->
+    <my-search :backgroundColor=backgroundColor :borderRadius=borderRadius></my-search>
     <view class="scroll-view-container">
       
       <!-- 左侧的滚动视图区域 -->

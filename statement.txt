@@ -7,7 +7,7 @@
   5. 分类导航区域
   6. 楼层区域
   7. 楼层的编程式导航  →  推荐声明式导航，编程式导航太乱套了，嵌套太深  →  实际上用的是声明式导航...
-  8. 提交到github  →  提交home分支到远程仓库、本地切换分支到main、本地home分支合并到main分支、删除本地home分支、提交本地main分支到远程仓库
+  8. 提交 home分支到 github  →  提交home分支到远程仓库、本地切换分支到main、本地home分支合并到main分支、删除本地home分支、提交本地main分支到远程仓库
 三. 配置 cate页面
   1. 创建 cate分支
   2. 获取手机设备的所有信息
@@ -15,4 +15,33 @@
   4. 配置二级列表  →  不要使用嵌套循环
   5. 配置三级列表  →  不要使用嵌套循环
   6. 三级列表的编程式导航  →  拼接 url 地址
-  7. 提交到github
+  7. 提交 cate分支到 github
+四. 配置 search组件页面
+  1. 创建 search分支
+  2. 使用uniapp的组件
+  3. 完成搜索框的封装  →  只是长得像搜索框
+  4. 样式做动态处理  →  父子传值
+  5. 给组件做吸顶效果，固定于顶部
+五. 配置 goodsSearch页面
+  1. 使用uni自带的uni-search-bar组件  →  详见官网
+  2. 改变uni-search-bar的样式
+  3. 添加 进入页面自动聚焦输入框
+  4. 添加 输入框防抖处理(回城，只执行最后一次)
+  5. 封装 请求函数，内容为 【根据输入字段返回来的结果】
+  6. 渲染'5'的结果
+  7. 关于'5'的结果的处理  →  先逆转顺序让后搜索的靠前  →  重复出现的，先删除，再添加即可  ==> 用Set对象！！！没用过，新知识！！！!!!
+     补充新知识：Set 对象是值的合集（collection）。集合（set）中的元素只会出现一次，即集合中的元素是唯一的。
+                用add(ele) 方法成功将每一个元素插入到集合中（即，调用 add() 方法时集合中不存在相同的元素）的顺序。
+                用delete(ele) 方法删除ele元素
+                用Array.from(set) 方法将 Set 对象转化为 Array 数组
+        // 1. 将 Array 数组转化为 Set 对象
+        const set = new Set(this.historyList)
+        // 2. 调用 Set 对象的 delete 方法，移除对应的元素
+        set.delete(this.kw)
+        // 3. 调用 Set 对象的 add 方法，向 Set 中添加元素
+        set.add(this.kw)
+        // 4. 将 Set 对象转化为 Array 数组
+        this.historyList = Array.from(set)
+  8. 将搜索历史存储到本地  →  uni.setStorageSync(key, value)
+  9. 点击(就是搜索记录)搜索记录 前往 商品列表页面
+  10. 提交到 search分支到 github

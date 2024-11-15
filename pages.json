@@ -21,6 +21,9 @@
         },
         {
           "path": "goodsList/goodsList"
+        },
+        {
+          "path" : "goodsSearch/goodsSearch"
         }
       ]
     }

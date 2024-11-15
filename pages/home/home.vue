@@ -1,7 +1,7 @@
 <script setup>
   import { ref } from 'vue'
 
-  // 轮播图模块
+  // 一、轮播图模块
   const swiperList = ref([])
   const getSwiperList = async () => {
     const { data: res } = await  uni.$http.get('/api/public/v1/home/swiperdata')
@@ -10,7 +10,7 @@
   }
   getSwiperList()
 
-  // 分类导航区域模块
+  // 二、分类导航区域模块
   const navList = ref([])
   const getNavList = async () => {
     const { data: res } = await uni.$http.get('/api/public/v1/home/catitems')
@@ -27,7 +27,7 @@
     }
   }
 
-  // 楼层区域模块
+  // 三、楼层区域模块
   const floorList = ref([])
   const getFloorList = async () => {
     const { data: res } = await uni.$http.get('/api/public/v1/home/floordata')
@@ -47,6 +47,9 @@
 
 <template>
   <!-- 注意：还是使用了 小程序 的标签，而不是 vue的标签    语法用vue的 -->
+
+  <!-- 搜索组件 -->
+  <my-search></my-search>
 
   <view>
     <!-- 轮播图区域 -->
