@@ -44,7 +44,7 @@
         this.historyList = Array.from(set)
   8. 将搜索历史存储到本地  →  uni.setStorageSync(key, value)
   9. 点击(就是搜索记录)搜索记录 前往 商品列表页面
-  10. 提交到 search分支到 github
+  10. 提交 search分支到 github
 六. 配置 goodsList页面
   1. 创建 goodsList分支
      补充新知识： ?. 运算符  →  JS的可选链语法  →  用于安全地访问嵌套对象属性
@@ -65,4 +65,20 @@
   5. 实现下拉刷新
   6. 实现节流  →  使用节流阀  →  只执行第一次
      备注：防抖  →  只执行最后一次，回城
-  7. 
+  7. 提交 goodsList分支到 github
+七. 配置 goodsDetail页面
+  1. 创建 goodsDetail分支
+  2. 获取数据、渲染页面、美化页面
+  3. 轮播图的预览  →  这是个新知识
+     补充新知识：  点击时 可以 查看 大图的预览
+        uni.previewImage({
+          // 预览时，默认显示图片的索引
+          current: index,
+          // 所有图片 url 地址的数组
+          urls: photoList.map(x => x.photo_big)
+        })
+  4. 商品文字信息的添加
+  5. 商品图文的添加
+  6. 解决商品图文的一些问题：图片之间的间隙、ios用户无法查看
+  7. 加载未完成时不显示商品的所有信息，用v-if，这是为了商家和顾客好
+  8. 使用 uniapp自带的 uni-goods-nav 组件，完成商品导航组件的制作  →  固定于底部，用fixed好点，不要sticky
