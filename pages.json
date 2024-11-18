@@ -20,7 +20,12 @@
           "path": "goodsDetail/goodsDetail"
         },
         {
-          "path": "goodsList/goodsList"
+          "path": "goodsList/goodsList",
+          "style": {
+            "onReachBottomDistance": 150,
+            "enablePullDownRefresh": true,
+            "backgroundColor": "#F8F8F8"
+          }
         },
         {
           "path" : "goodsSearch/goodsSearch"
