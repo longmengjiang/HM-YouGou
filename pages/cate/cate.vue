@@ -1,6 +1,15 @@
 <script setup>
   import { ref } from 'vue'
   
+  // 渲染导航栏购物车数量
+  import { onShow } from '@dcloudio/uni-app'
+  import { useCartStore } from '@/store'
+  const cartStore = useCartStore()
+  onShow(()=> {
+    if(!cartStore.cartTotal) return
+    cartStore.setBadge()
+  })
+  
   // 一、获取设备信息
   const deviceInfo = uni.$deviceInfo
   const scrollHeight = deviceInfo.windowHeight - 50

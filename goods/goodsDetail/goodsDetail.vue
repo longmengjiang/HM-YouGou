@@ -1,6 +1,7 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import { onLoad } from '@dcloudio/uni-app'
+  import { useCartStore } from '@/store'
   
   // 页面加载时获取参数
   onLoad((goods_id) => {
@@ -34,16 +35,18 @@
   // 四、在未加载完毕数据之前，不要渲染商品的所有信息！！！  对谁都好 客户等等  →  使用v-if直接隐藏
   
   // 五、商品导航组件模块数据
-  const options = ref([{
+  const options = ref([
+    {
 			icon: 'shop',
 			text: '店铺',
 			infoBackgroundColor:'#007aff',
 			infoColor:"red"
-		}, {
+		},
+    {
 			icon: 'cart',
 			text: '购物车',
-			info: 2
-		},
+			info: 0
+		}
   ])
   const buttonGroup = ref([
     {
@@ -67,9 +70,52 @@
       })
     }
   }
-  const buttonClick = () => {
+  
+  const cartStore = useCartStore()
+  const buttonClick = (e) => {
     // 到这里并没有写内容，直接就提交分支到github了
-  }
+    // 1. 判断是否点击了 加入购物车 按钮
+    if (e.content.text === '加入购物车') {
+      // 2. 组织一个商品的信息对象
+      const goods = {
+        goods_id: goodsInfo.value.goods_id,       // 商品的Id
+        goods_name: goodsInfo.value.goods_name,   // 商品的名称
+        goods_price: goodsInfo.value.goods_price, // 商品的价格
+        goods_count: 1,                           // 商品的数量
+        goods_small_logo: goodsInfo.value.goods_small_logo, // 商品的图片
+        goods_state: true                         // 商品的勾选状态
+      }
+      cartStore.addGoodsToCartList(goods)  // 看到这里，这里可能有个bug，做到持久化存储到本地
+    }
+  } 
+   
+  // 七、watch监听 商品总数的变化，映射到购物车右上角红色数字上
+  watch(
+    () => cartStore.cartTotal,
+    (newValue) => {
+      // 法一：(更推荐，因为直接定位到购物车)
+      // 1. 通过数组的 find() 方法，找到购物车按钮的配置对象
+      // const findResult = options.value.find((x) => x.text === '购物车')
+
+      // if (findResult) {
+        // 2. 动态为购物车按钮的 info 属性赋值
+        // findResult.info = newValue
+      // }
+      
+      // 法二：
+      options.value[1].info = newValue
+    },
+    {
+      immediate: true,
+      deep: true
+    }
+  )
+  
+  
+  
+  // 八、完善购物车徽标，在所有页面都展示
+  
+  // mixins: ['setBadge']
 </script>
 
 <template>

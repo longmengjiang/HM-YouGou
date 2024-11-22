@@ -1,3 +1,4 @@
+文档地址：https://applet-base-api-t.itheima.net/docs-uni-shop
 一. 配置 tabbar
 二. 配置 home页面
   1. 加入轮播图
@@ -60,6 +61,7 @@
   2. 获取传递过来的参数
      补充新知识：uni.getLaunchOptionsSync()  →  获取启动时的参数  →  真的吗，卡在这里超级久，还没有解决
      补充新知识：妈的神经病  import { onLoad } from '@dcloudio/uni-app'  这样就可以使用小程序的生命周期函数了 ！！！！！！！！
+                最好是这样使用  →  onLoad(()=> cartStore.getList())
   3. 将商品列表的具体内容封装成 my-goods 组件
   4. 实现上拉加载更多  →  import { onReachBottom } from '@dcloudio/uni-app'
   5. 实现下拉刷新
@@ -82,3 +84,58 @@
   6. 解决商品图文的一些问题：图片之间的间隙、ios用户无法查看
   7. 加载未完成时不显示商品的所有信息，用v-if，这是为了商家和顾客好
   8. 使用 uniapp自带的 uni-goods-nav 组件，完成商品导航组件的制作  →  固定于底部，用fixed好点，不要sticky
+  9. 提交 goodsDetail分支到 github
+八. 配置 加入购物车 模块
+  1. 创建 cart分支
+  2. 使用全局数据管理 pinia 来管理数据  关于如何配置，和vscode的不一样，请到uniapp官网学习如何配置！！！
+     注意：只是配置的方法不一样，使用的方法还是一样的     pinia-plugin-persistedstate包要下载  npm install pinia-plugin-persistedstate
+  3. 在pinia里 完成 加入商品 到 购物车 的功能，并在 goodsDetail页面进行调用
+  4. 实现购物车的计数功能  →  用watch监听器，注意语法！！！
+  5. 持久化存储购物车信息  →  uniapp的pinia没办法使用persist快速本地存储？？？？  →  应该是没办法
+  6. 将购物车数量同步到首页的tabBar导航栏  →  将数字徽标 抽离成 js文件！！！！！！！  →  具体就是将封装好的js代码复用
+     补充新知识：
+      // 调用 uni.setTabBarBadge() 方法，为购物车设置右上角的徽标
+      uni.setTabBarBadge({
+         index: 2, // 索引  首页、分类、购物车、我的  索引是'2'
+         text: this.total + '' // 注意：text 的值必须是字符串，不能是数字
+      })
+      
+      最终的做法：我没有做成js文件，而是放到了pinia里面，作为一个方法使用
+      最终做法失败了，尝试了 provide、inject也失败了（需要是父子组件）
+      解决办法：不是调用 onLoad 而是调用 onShow
+              onLoad(options) {}  →  监听页面加载，一个页面只调用1次  →  最常用
+              onShow() {}         →  监听页面显示
+  7. 将购物车所有 商品的信息 同步接收到 cart页面
+     注意：请使用新的变量来接收 商店的 商品数量和列表，这是为了能够及时渲染！
+九. 配置 cart购物车 页面
+  建议：因为全都跟商品列表有关，所以建议只存储商品列表，其他跟商品有关的要全部做成计算属性！！！很重要  非计算属性的，更改完后要重新保存本地/后端
+  1. 渲染商品
+     做好框架、美化样式，获取数据、渲染数据
+  2. 为 my-goods组件 添加 radios 单选框，由于是个复用组件，所以要控制 单选框 的显示/隐藏
+  3. 修改 radios，要 从 my-goods 通知到父组件 cart，再由父组件调用 仓库的修改方法 进行修改（谁的数据谁负责）
+     父组件传递过来的数据，子组件要定义一个变量 例如props 来接收（如果要在js里用的话），html里则直接用就可以
+  4. 添加 uniapp内置的 uni-number-box 数字输入框（计数），并修改数量  →  方法同3
+  5. 添加 uniapp内置的 uni-swipe-action ，用于右滑删除商品  →  uni-swipe-action 和 uni-swipe-action-item 需要同时使用  事件中传入 $event 获取额外参数
+     有个bug：可能是源代码的bug：
+      页面有2件商品上下排列，仅仅右滑了第一件商品，并且点击删除（删除成功了）
+      但是第二个商品会跑到第一个商品的位置（这个是正常，保留），并且第二个商品也会有右滑显示【删除】的按钮（这个不正常，要改）
+     解决方法：法一：给每个删除按钮单个分开来，自己的商品有自己的右滑删除模块   →   此方法还有一个功能，不会一次性显示多个右滑删除模块
+              法二：给整个商品组件添加一个新的key（cartListKey），每次操作时都重新给key赋值，强制组件重新渲染
+  6. 添加收获地址  →  创建一个新组件，my-address
+     补充新知识：uni.chooseAddress()  →  调起用户编辑收货地址原生界面，并在编辑完成后返回用户选择的地址，需要用户授权 scope.address
+     在manifest.json文件里，在 "mp-weixin" 里和 appid同级声明下面这个
+     "requiredPrivateInfos": [
+       "getLocation",  获取精确地理位置
+       "onLocationChange",  监听实时地理位置变化事件
+       "startLocationUpdateBackground",  接收位置消息（前后台）
+       "chooseAddress"  获取用户地址信息 → 本地项目仅需这一行需求
+     ]
+  7. 定义新增和已有地址的显示/隐藏  →  v-if="JSON.stringify(address) === '{}'" 为什么必须要JSON？？
+  8. 对于 address 和 addressString 的处理
+  9. 解决收货地址授权失败的问题  （虽然我还没有遇到）详见文档 9.2.8
+ 10. 解决 iPhone 真机上无法重新授权的问题  （虽然我还没有遇到）详见文档 9.2.9
+  // 刚好从结算组件开始，从1开始 
+  1. 新建 my-settle 结算组件
+  2. 在商店里 定义 已勾选的商品总数量
+  3. 全选 / 反选的使用  →  尽量使用 计算属性
+  4. 商品价格的计算  →  尽量使用 计算属性

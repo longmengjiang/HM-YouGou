@@ -40,11 +40,14 @@ $http.afterRequest = () => {
 // 1.3 将 $http 挂载到 uni 上
 uni.$http = $http
 
+import * as Pinia from 'pinia';
 
 export function createApp() {
   const app = createSSRApp(App)
+  app.use(Pinia.createPinia())
   return {
-    app
+    app,
+    Pinia
   }
 }
 // #endif

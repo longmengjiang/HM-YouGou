@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@escook/request-miniprogram": "^0.2.1"
+    "@escook/request-miniprogram": "^0.2.1",
+    "pinia-plugin-persistedstate": "^4.1.3"
   }
 }

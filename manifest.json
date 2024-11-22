@@ -53,9 +53,16 @@
         "appid" : "wxc1e75766eb6a1c50",
         "setting" : {
             "urlCheck" : false,
-            "cheackSiteMap":false
+            "cheackSiteMap" : false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        // 仅微信小程序开启地址权限
+        "requiredPrivateInfos": [ 
+          "getLocation",
+          "onLocationChange",
+          "startLocationUpdateBackground",
+          "chooseAddress"
+        ]
     },
     "vueVersion" : "3"
 }

@@ -35,7 +35,7 @@ const goSearch = () => {
    </view>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .my-search-container {
   // background-color: #c00000;
   height: 50px;

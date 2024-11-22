@@ -1,6 +1,15 @@
 <script setup>
   import { ref } from 'vue'
 
+  // 渲染导航栏购物车数量
+  import { onShow } from '@dcloudio/uni-app'
+  import { useCartStore } from '@/store'
+  const cartStore = useCartStore()
+  onShow(()=> {
+    if(!cartStore.cartTotal) return
+    cartStore.setBadge()
+  })
+
   // 一、轮播图模块
   const swiperList = ref([])
   const getSwiperList = async () => {
