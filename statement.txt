@@ -1,4 +1,32 @@
-文档地址：https://applet-base-api-t.itheima.net/docs-uni-shop
+开发文档参考地址：https://applet-base-api-t.itheima.net/docs-uni-shop
+github仓库：https://github.com/longmengjiang/HM-YouGou（暂未公开）→ 现已公开
+
+git checkout -b home  →  创建并切换到 home分支
+git add .  →  完成开发后保存到暂存区
+git commit -m "完成了 home页面的开发"  →  将暂存区的代码提交到本地仓库
+git push -u HM-YouGou home  →  将本地仓库的home分支提交到远程仓库的home分支上（远程仓库会自动生成一个home分支，不用手动创建）
+
+git checkout main  →  切换回到主分支main
+git merge home  →  合并home分支到main（当前分支）上
+git push -u HM-YouGou main  →  此时也会有 "完成了 home页面的开发" 的提交记录（因为合并了home分支，带有home分支的提交记录，故切换分支后先合并再直接提交即可）
+git branch -d home  →  删除 home分支
+如此反复
+
+                  需要补充的重点知识  →  小程序的登录相关 以及 微信支付相关  →  这是必须的
+                  
+判断当前版本方法  →  关键api wx.getSystemInfoSync().SDKVersion
+
+说明: 1. 此商家的收款功能已被限制，暂无法支付。商家可登录微信商户平台/微信支付商家助手小程序/经营账户页面查看原因和解决方案
+      故无法实现微信支付
+      2. "我的"页面功能不完善，仅仅只有退出登录功能，具体完善日期敬请期待
+      3. 如果发布为app，则收获地址、一键登录 等功能不可使用  →  这些是微信的专属api
+
+发布之前的准备工作：
+    1. 将域名配置到小程序上
+    2. 检查代码质量
+    3. 真机上试操作一遍                注意：此时此刻还未完成提交到github  2024.11.22 22:52
+                                           2024.11.24 17:08 完成提交到github
+
 一. 配置 tabbar
 二. 配置 home页面
   1. 加入轮播图
@@ -139,3 +167,57 @@
   2. 在商店里 定义 已勾选的商品总数量
   3. 全选 / 反选的使用  →  尽量使用 计算属性
   4. 商品价格的计算  →  尽量使用 计算属性
+  5. 提交 cart分支到 github
+十. 配置 my我的页面
+  1. 创建 settle分支
+  2. 创建 my-login / my-usefInfo 组件
+  3. 在 my-settle组件里，根据用户是否 选择地址/商品 / 是否登录 来判断 点击 "结算商品后" 是否能够跳转到登录页面
+  4. 登录组件：  先不做了，非常麻烦
+    4.1 渲染页面
+    4.2 登录的大前提说明：
+        23年之前微信小程序官方就将  wx.getUserProfile  wx.getUserInfo 收回了，在2.27.1之前的版本均可使用
+        24年11月22日：可以通过微信提供的头像昵称填写能力快速完善
+        头像：需要将 button 组件 open-type 的值设置为 chooseAvatar，当用户选择需要使用的头像之后，可以通过 bind:chooseavatar="" 事件回调获取到头像信息的临时路径
+        昵称：需要将 input 组件 type 的值设置为 nickname，当用户在此input进行输入时，键盘上方会展示微信昵称。
+             从基础库2.24.4版本起，在onBlur 事件触发时，微信将异步对用户输入的内容进行安全监测，若未通过安全监测，微信将清空用户输入的内容
+             建议开发者通过 form 中form-type 为submit 的button 组件收集用户输入的内容
+             在开发者工具上，input 组件是用 web 组件模拟的，因此部分情况下并不能很好的还原真机的表现，建议开发者在使用到原生组件时尽量在真机上进行调试
+    4.3 登录的前提：
+    4.4 登录的坏消息：
+        从P172开始，用户的登录基本是注定失败的，建议自己手动写死token以完成后续开发 token的赋值可以写在my-login组件的getToken的失败条件里，这样可以完整的走一下登录流程 token的值为："Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIzLCJpYXQiOjE1NjQ3MzAwNzksImV4cCI6MTAwMTU2NDczMDA3OH0.YPt-XeLnjV-_1ITaXGY2FhxmCe4NvXuRnRB8OMCfnPo" 注意Bearer后面有一个空格！有一个空格！有一个空格！别漏了拿着这个token可以一直开发到P186，如果你按照上面token赋值的话，订单是可以创建成功的，创建不成功就退出登录然后重登一下，务必反复确认Storage界面里面token数值正确然后来到P187，到这里就走不动了，预支付订单生成时会报错"用户ID不符"，手动修改用户ID也无果，可能就只能走到这一步了，不过也就2P的内容就完结了，无伤大雅
+        补充新知识：
+        wx.login()  →  用户登录凭证（有效期五分钟）。开发者需要在开发者服务器后台调用 code2Session，使用 code 换取 openid、unionid、session_key 等信息
+  5. 用户信息组件：
+  说明：使用 用户的昵称 作为是否登录的条件！
+    5.1 基本页面的渲染
+    5.2 退出登录的调用
+    5.3 回到购物车页面的 结算按钮 ，点击时若没有登录则跳转到登录页面
+    5.4 若是 结算  →  登录  →  登录成功，则要重新回到结算页面
+        步骤: 1. 在商店声明一个 redirectInfo 对象(初始值为空对象) 以及 更新的方法，，用于在 结算页面 跳转到 登录页面 时，调用 更新的方法 传递 openType、from属性，switchTab、/pages/cart/cart
+              2. 在登录成功之后，定义一个新方法navigateBack()，判断商店里是否有 redirectInfo 对象，有则调用 uni.switchTab方法，跳转到对应页面(参数来自于from)，是否跳转根据 openType === switchTab 判断
+              3. 跳转回去之后，清空 redirectInfo 对象
+  6. 创建订单并支付
+    6.1 在请求头中添加 Token 身份认证的字段
+    6.2 创建订单
+    6.3 订单预支付
+    6.4 发起微信支付
+      具体流程：
+        ①创建订单
+          请求创建订单的 API 接口：把（订单金额、收货地址、订单中包含的商品信息）发送到服务器
+          服务器响应的结果：订单编号
+        ②订单预支付
+          请求订单预支付的 API 接口：把（订单编号）发送到服务器
+          服务器响应的结果：订单预支付的参数对象，里面包含了订单支付相关的必要参数
+        ③发起微信支付
+          调用 uni.requestPayment() 这个 API，发起微信支付；把步骤 2 得到的 “订单预支付对象” 作为参数传递给 uni.requestPayment() 方法
+          监听 uni.requestPayment() 这个 API 的 success，fail，complete 回调函数
+    说明：此次三个流程的解释：
+          创建订单  →  √
+          预付订单  →  √
+          但是  →  此商家的收款功能已被限制，暂无法支付。商家可登录微信商户平台/微信支付商家助手小程序/经营账户页面查看原因和解决方案
+       →  支付订单  →  ×
+  7. 说明：本页面仅仅只有 "退出登录" 功能，具体完善日期敬请期待
+  8. 提交 settle分支到github
+十一、发布
+  1. 发布到微信小程序
+  2. 发布到app（仅限安卓）
